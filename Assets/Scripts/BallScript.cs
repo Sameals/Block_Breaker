@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class BallScript : MonoBehaviour
 {
-    [SerializeField] float ballForce = 400;
+    public static BallScript instance;
+
+    [SerializeField] float ballForce = 500;
     [SerializeField] Transform ballPosition;
     [SerializeField] Transform explosion;
     [SerializeField] Transform powerup;
@@ -15,6 +17,11 @@ public class BallScript : MonoBehaviour
     Rigidbody2D rb;
     int livesChange = -1;
     AudioSource audio;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -43,6 +50,7 @@ public class BallScript : MonoBehaviour
         {
             isGamestarted = true;
             rb.AddForce(Vector2.up * ballForce);
+            
         }
     }
 
@@ -54,7 +62,8 @@ public class BallScript : MonoBehaviour
             Debug.Log("ball hit the ground");
             rb.velocity = Vector2.zero;
             isGamestarted = false;
-            UIManager.Instance.updateLives(livesChange);
+            LivesScript.instance.updateLives(livesChange);
+            ResetPosition();
         }
     }
 
@@ -71,7 +80,7 @@ public class BallScript : MonoBehaviour
             else
             {
                 int randomChance = Random.Range(1, 101);
-                if (randomChance < 20)
+                if (randomChance < 10)
                 {
                     Instantiate(powerup, collision.transform.position, collision.transform.rotation);
                 }
@@ -79,7 +88,7 @@ public class BallScript : MonoBehaviour
                 Transform newExplosion = Instantiate(explosion, collision.transform.position, collision.transform.rotation);
                 Destroy(newExplosion.gameObject, 1f);
 
-                UIManager.Instance.UpdateScore(brickScript.points);
+                ScoreManagement.instance.UpdateScore(brickScript.points);
 
                 levelGenerator.UpdateNoOfBricks();
 
@@ -87,5 +96,12 @@ public class BallScript : MonoBehaviour
             }
             audio.Play();
         }
+    }
+    public void ResetPosition()
+    {
+        transform.position = ballPosition.position;
+        rb.velocity = Vector2.zero;
+        isGamestarted = false;
+        addBallForce();
     }
 }

@@ -10,18 +10,17 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    [SerializeField] int lives;
-    [SerializeField] int score;
-    [SerializeField] TextMeshProUGUI livesText;
-    [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] GameObject GameOverPanel;
     [SerializeField] GameObject mainMenuPanel;
     [SerializeField] GameObject PausedPanel;
+    [SerializeField] GameObject nextLevelPanel;
 
     [SerializeField] Button startButton;
     [SerializeField] Button pausedRestartButton;
     [SerializeField] Button resumeButton;
     [SerializeField] Button playAgainButton;
+    [SerializeField] Button nxtLevelPlayAgain;
+    [SerializeField] Button nxtLevel;
     [SerializeField] Button quitButton;
 
     private void Awake()
@@ -32,14 +31,21 @@ public class UIManager : MonoBehaviour
         pausedRestartButton.onClick.AddListener(OnRestart);
         resumeButton.onClick.AddListener(OnResume);
         playAgainButton.onClick.AddListener(OnRestart);
+        nxtLevelPlayAgain.onClick.AddListener(OnRestart);
+        nxtLevel.onClick.AddListener(OnNxtLevel);
         quitButton.onClick.AddListener(OnQuit);
     }
+
     void Start()
     {
         PausedPanel.SetActive(false);
         Time.timeScale = 0;
-        livesText.text = "Lives : " + lives;
-        scoreText.text = "Score : " + score;
+    }
+
+    private void OnNxtLevel()
+    {
+        Time.timeScale = 1;
+        nextLevelPanel.SetActive(false);
     }
 
     void OnStartClicked()
@@ -65,34 +71,18 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1;
         PausedPanel.SetActive(false);
     }
-
-    public void updateLives(int livesChange)
-    {
-        lives += livesChange;
-
-        //check no lives left and trigger the end of the game
-        if (lives <= 0)
-        {
-            lives = 0;
-            GameOver();
-        }
-
-        livesText.text = "Lives : " + lives;
-    }
-
-    public void UpdateScore(int scorePoints)
-    {
-        score += scorePoints;
-
-        scoreText.text = "Score : " + score;
-    }
-
     public void GameOver()
     {
-        //isGameOver = true;
         GameOverPanel.SetActive(true);
         Time.timeScale = 0;
     }
+    
+    public void NxtLevel()
+    {
+        nextLevelPanel.SetActive(true);
+        Time.timeScale = 0;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

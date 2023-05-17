@@ -7,6 +7,7 @@ public class PaddleScript : MonoBehaviour
     [SerializeField] float speed = 1f;
     [SerializeField] float maxLeftScreen;
     [SerializeField] float maxRightScreen;
+    [SerializeField] int maxLives = 5;
     [SerializeField] PowerUp extraLives;
 
     void Update()
@@ -37,6 +38,9 @@ public class PaddleScript : MonoBehaviour
     }
     private void ApplyPowerUp(GameObject gameObject)
     {
-        UIManager.Instance.updateLives(extraLives.Amount);
+        if(LivesScript.instance.GetLives() < maxLives)
+        {
+            LivesScript.instance.updateLives(extraLives.Amount);
+        }
     }
 }
