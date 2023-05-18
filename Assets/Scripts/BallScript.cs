@@ -68,6 +68,7 @@ public class BallScript : MonoBehaviour
     }
 
     //break bricks
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Brick"))
@@ -79,7 +80,7 @@ public class BallScript : MonoBehaviour
             }
             else
             {
-                int randomChance = Random.Range(1, 101);
+                int randomChance = Random.Range(1, 100);
                 if (randomChance < 10)
                 {
                     Instantiate(powerup, collision.transform.position, collision.transform.rotation);
@@ -94,9 +95,11 @@ public class BallScript : MonoBehaviour
 
                 Destroy(collision.gameObject);
             }
+
             audio.Play();
         }
     }
+
     public void ResetPosition()
     {
         transform.position = ballPosition.position;
